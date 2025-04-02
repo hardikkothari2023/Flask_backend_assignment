@@ -1,5 +1,5 @@
 from celery import Celery
-from app.config import Config
+from config import Config
 
 def make_celery(app_name=__name__):
     return Celery(

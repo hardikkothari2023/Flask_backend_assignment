@@ -1,19 +1,17 @@
 from flask import Flask
-from app.config import config
-from app.extensions import db, jwt, migrate
-from app.routes import register_blueprints
+from flask_sqlalchemy import SQLAlchemy
+from flask_migrate import Migrate
+from app.extensions import db  # Import db from extensions
+from app.models import User  # Register models
 
-def create_app(config_name="development"):
+def create_app():
     app = Flask(__name__)
-    app.config.from_object(config[config_name])
-
-    db.init_app(app)
-    jwt.init_app(app)
-    migrate.init_app(app, db)
+    app.config.from_object("config.Config")
+    
+    db.init_app(app)  # Initialize database
+    Migrate(app, db)  # Initialize migrations
 
     with app.app_context():
-        db.create_all()
+        db.create_all()  # Try to create tables
 
-    register_blueprints(app)
-    
     return app
